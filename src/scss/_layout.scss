@@ -97,9 +97,39 @@
     @include md { grid-template-columns: 1fr 1.3fr 1fr; }
   }
 
-  &__art { display: none; @include md { display: block; } svg { width: 100%; max-width: 260px; margin-inline: auto; } }
-  &__art--left svg { animation: bob 5s ease-in-out infinite; }
-  &__art--right svg { animation: bob 5s ease-in-out infinite reverse; }
+  &__art { display: none; @include md { display: block; } }
+  &__center { @include md { grid-column: 2; } }
+  &__art--right { @include md { grid-column: 3; } }
+
+  // Foto real del postre, enmarcada como plato con borde de betún
+  &__photo {
+    position: relative;
+    width: 100%;
+    max-width: 250px;
+    aspect-ratio: 1;
+    margin-inline: auto;
+    border-radius: 50%;
+    background: $cream;
+    box-shadow: 0 0 0 8px $cream, 0 0 0 14px $butter, 0 18px 30px rgba($cocoa, .25);
+    animation: bob 5s ease-in-out infinite;
+
+    img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+    &::after {
+      content: attr(data-sticker);
+      position: absolute;
+      right: -6px; bottom: 6px;
+      width: 54px; height: 54px;
+      display: grid; place-items: center;
+      font-size: 1.6rem;
+      background: $white;
+      border-radius: 50%;
+      box-shadow: $shadow-sm;
+      transform: rotate(12deg);
+    }
+  }
+  &__art--left &__photo { transform: rotate(-4deg); }
+  &__art--right &__photo { box-shadow: 0 0 0 8px $cream, 0 0 0 14px $pink-deep, 0 18px 30px rgba($cocoa, .25); animation-direction: reverse; }
 
   &__kicker { display: inline-block; margin-bottom: .8rem; }
   &__title {

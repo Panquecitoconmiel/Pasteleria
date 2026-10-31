@@ -79,6 +79,12 @@ CREATE TABLE IF NOT EXISTS order_status_history (
   CONSTRAINT fk_history_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS settings (
+  `key`      VARCHAR(60) PRIMARY KEY,
+  value      VARCHAR(255),
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 -- ---------- Datos de ejemplo ----------
 INSERT IGNORE INTO categories (id, name, slug, emoji, sort_order) VALUES
   (1, 'Pasteles',   'pasteles',   '🎂', 1),

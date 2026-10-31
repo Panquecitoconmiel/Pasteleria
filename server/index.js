@@ -32,6 +32,10 @@ app.use((err, req, res, next) => {
 });
 
 async function ensureAdmin() {
+  // Tabla de ajustes (portada). Se crea sola para quien ya tenía la base de datos.
+  await db.query(`CREATE TABLE IF NOT EXISTS settings (
+    \`key\` VARCHAR(60) PRIMARY KEY, value VARCHAR(255),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)`);
   const [[{ n }]] = await db.query('SELECT COUNT(*) AS n FROM admins');
   if (n > 0) return;
   const email = (process.env.ADMIN_EMAIL || 'admin@mafer.com').toLowerCase();

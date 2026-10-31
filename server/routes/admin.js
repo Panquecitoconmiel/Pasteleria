@@ -169,6 +169,23 @@ router.delete('/products/:id', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// ---------- Portada (fotos del encabezado) ----------
+router.post('/hero', upload.fields([{ name: 'left', maxCount: 1 }, { name: 'right', maxCount: 1 }]), async (req, res, next) => {
+  try {
+    for (const side of ['left', 'right']) {
+      const file = req.files?.[side]?.[0];
+      const remove = req.body[`remove_${side}`] === '1';
+      if (!file && !remove) continue;
+      const key = `hero_${side}`;
+      const [[old]] = await db.query('SELECT value FROM settings WHERE `key` = ?', [key]);
+      const value = file ? `/uploads/${file.filename}` : null;
+      await db.query('INSERT INTO settings (`key`, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = VALUES(value)', [key, value]);
+      if (old?.value) removeUpload(old.value);
+    }
+    res.json({ ok: true });
+  } catch (e) { next(e); }
+});
+
 // ---------- Pedidos ----------
 router.get('/orders', async (req, res, next) => {
   try {

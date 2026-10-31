@@ -65,6 +65,7 @@
     if (b.dataset.tab === 'products') loadProducts();
     if (b.dataset.tab === 'categories') renderCategories();
     if (b.dataset.tab === 'orders') loadOrders();
+    if (b.dataset.tab === 'hero') loadHero();
   }));
 
   // ---------- Estadísticas ----------
@@ -289,6 +290,55 @@
     const t = e.target.closest('[data-toggle]');
     if (!t) return;
     try { await api(`/api/admin/products/${t.dataset.toggle}/availability`, { method: 'PATCH', body: { available: t.checked } }); loadProducts(); } catch (ex) { guard(ex); }
+  });
+
+  // ---------- Portada ----------
+  const heroForm = $('[data-hero-form]');
+  const heroRemove = { left: false, right: false };
+
+  function showHeroPic(side, src) {
+    const img = $(`[data-hero-preview="${side}"]`);
+    if (src) img.src = src; else img.removeAttribute('src');
+    $(`[data-hero-empty="${side}"]`).hidden = !!src;
+  }
+
+  async function loadHero() {
+    try {
+      const h = await api('/api/hero');
+      heroForm.reset();
+      heroRemove.left = heroRemove.right = false;
+      showHeroPic('left', h.left);
+      showHeroPic('right', h.right);
+    } catch (ex) { guard(ex); }
+  }
+
+  heroForm.addEventListener('change', (e) => {
+    const side = e.target.dataset.heroInput;
+    const file = e.target.files?.[0];
+    if (side && file) { heroRemove[side] = false; showHeroPic(side, URL.createObjectURL(file)); }
+  });
+
+  heroForm.addEventListener('click', (e) => {
+    const side = e.target.closest('[data-hero-remove]')?.dataset.heroRemove;
+    if (!side) return;
+    heroRemove[side] = true;
+    heroForm.elements[side].value = '';
+    showHeroPic(side, null);
+  });
+
+  heroForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData();
+    ['left', 'right'].forEach((side) => {
+      const file = heroForm.elements[side].files[0];
+      if (file) fd.append(side, file);
+      else if (heroRemove[side]) fd.append(`remove_${side}`, '1');
+    });
+    try {
+      await api('/api/admin/hero', { method: 'POST', body: fd });
+      toast('🖼 Portada actualizada');
+      loadHero();
+    } catch (ex) { guard(ex); }
   });
 
   boot();

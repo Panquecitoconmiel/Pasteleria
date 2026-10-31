@@ -43,6 +43,21 @@
       </button>`).join('');
   }
 
+  // Fotos del encabezado: las que subió el admin en "Portada";
+  // si no hay, usa las fotos de los pasteles favoritos.
+  async function loadHero() {
+    let hero = {};
+    try { hero = await api('/api/hero'); } catch { /* sin portada */ }
+    const fallback = products.filter((p) => p.featured).concat(products).map((p) => p.image).filter((src) => src.startsWith('/uploads/'));
+    const pics = { left: hero.left || fallback[0], right: hero.right || fallback.find((src) => src !== (hero.left || fallback[0])) };
+    ['left', 'right'].forEach((side) => {
+      const box = $(`[data-hero="${side}"]`);
+      if (!box || !pics[side]) return;
+      box.querySelector('img').src = pics[side];
+      box.hidden = false;
+    });
+  }
+
   async function load() {
     try {
       const [cats, prods] = await Promise.all([api('/api/categories'), api('/api/products')]);
@@ -52,6 +67,7 @@
         cats.map((c) => `<button data-cat="${esc(c.slug)}">${esc(c.emoji)} ${esc(c.name)}</button>`).join('');
       renderProducts();
       renderFeatured();
+      loadHero();
     } catch (e) {
       $('[data-products]').innerHTML = `<div class="notice notice--error" style="grid-column:1/-1">No pudimos cargar el menú (${esc(e.message)}). ¿Está corriendo el servidor y MySQL?</div>`;
     }

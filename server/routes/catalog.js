@@ -13,6 +13,15 @@ router.get('/config', (req, res) => {
   });
 });
 
+// Fotos de la portada (las sube el admin en la pestaña "Portada")
+router.get('/hero', async (req, res, next) => {
+  try {
+    const [rows] = await db.query("SELECT `key`, value FROM settings WHERE `key` IN ('hero_left','hero_right')");
+    const s = Object.fromEntries(rows.map((r) => [r.key, r.value]));
+    res.json({ left: s.hero_left || null, right: s.hero_right || null });
+  } catch (e) { next(e); }
+});
+
 router.get('/categories', async (req, res, next) => {
   try {
     const [rows] = await db.query('SELECT id, name, slug, emoji FROM categories ORDER BY sort_order, name');
