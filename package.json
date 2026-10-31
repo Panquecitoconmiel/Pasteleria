@@ -1,0 +1,31 @@
+{
+  "name": "mafer-pasteleria",
+  "version": "1.0.0",
+  "description": "Tienda en línea de la pastelería Mafer: catálogo, carrito, pedidos a domicilio, panel de administrador y pagos con Stripe (modo prueba).",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "concurrently \"npm:watch:css\" \"node --watch server/index.js\"",
+    "build:css": "sass src/scss/main.scss public/css/styles.css --style=compressed --no-source-map && sass src/scss/admin.scss public/css/admin.css --style=compressed --no-source-map",
+    "watch:css": "sass --watch src/scss/main.scss:public/css/styles.css src/scss/admin.scss:public/css/admin.css",
+    "db:init": "node scripts/init-db.js",
+    "postinstall": "npm run build:css"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.0",
+    "stripe": "^16.12.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "sass": "^1.79.4"
+  }
+}

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi pedido · Mafer</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600..900,0..100,0..1&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="header" data-header>
+    <div class="container">
+      <a class="logo" href="/"><img class="logo__mark" src="/img/logo.svg" alt=""><span class="logo__text">Mafer</span></a>
+      <div class="header__actions" style="margin-left:auto">
+        <a class="btn btn--ghost btn--sm" href="/#menu">Volver al menú</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container" style="max-width:760px">
+      <form class="card" data-lookup hidden>
+        <h1 class="page__title" style="font-size:2rem">Rastrea tu pedido</h1>
+        <div class="field"><label for="code">Código de pedido</label><input id="code" name="code" placeholder="MF-XXXXXX" required style="text-transform:uppercase"></div>
+        <button class="btn">Buscar</button>
+      </form>
+
+      <div data-tracker hidden>
+        <section class="tracker__hero">
+          <span class="pill" data-t-code></span>
+          <div class="eta" data-t-title>Pedido recibido</div>
+          <div data-t-sub class="muted"></div>
+          <div class="tracker__road"><span class="tracker__rider" data-t-rider>🛵</span></div>
+        </section>
+
+        <section class="card">
+          <h3>Estado</h3>
+          <ol class="steps" data-t-steps></ol>
+        </section>
+
+        <section class="card">
+          <h3>Resumen</h3>
+          <div data-t-items></div>
+          <div style="margin-top:.6rem">
+            <div class="summary-row"><span>Subtotal</span><span data-t-subtotal></span></div>
+            <div class="summary-row"><span>Envío</span><span data-t-delivery></span></div>
+            <div class="summary-row" data-t-tip-row><span>Propina</span><span data-t-tip></span></div>
+            <div class="summary-row summary-row--total"><span>Total</span><span data-t-total></span></div>
+          </div>
+          <p class="muted" style="margin-bottom:0" data-t-payment></p>
+        </section>
+      </div>
+
+      <p class="notice notice--error" data-error hidden></p>
+    </div>
+  </main>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+  <script src="/js/common.js"></script>
+  <script src="/js/track.js"></script>
+</body>
+</html>

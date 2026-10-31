@@ -1,0 +1,47 @@
+// ===== Paleta Mafer (inspirada en la referencia: rosa, crema, mantequilla y cacao) =====
+$pink:        #F7C6D0;
+$pink-soft:   #FDE7EC;
+$pink-deep:   #E8758F;
+$cream:       #FFF5EA;
+$butter:      #F6D58E;
+$butter-soft: #FCE8BC;
+$pumpkin:     #E8873A;
+$cocoa:       #6B4232;
+$cocoa-dark:  #4A2C20;
+$white:       #FFFFFF;
+$ok:          #5FA35A;
+$danger:      #D2445B;
+
+$font-display: 'Fraunces', 'Cooper Black', Georgia, serif;
+$font-body:    'Nunito', system-ui, -apple-system, sans-serif;
+
+$radius-sm: 12px;
+$radius:    20px;
+$radius-lg: 32px;
+$shadow:    0 10px 30px rgba($cocoa, .12);
+$shadow-sm: 0 4px 14px rgba($cocoa, .10);
+
+$bp-md: 760px;
+$bp-lg: 1080px;
+
+@mixin md { @media (min-width: $bp-md) { @content; } }
+@mixin lg { @media (min-width: $bp-lg) { @content; } }
+
+// Borde ondulado tipo "betún" (como los separadores de la referencia)
+@mixin scallop($color, $position: bottom, $size: 28px) {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: $size;
+    #{$position}: -$size + 1px;
+    $y: 0;
+    @if $position == top { $y: 100%; }
+    background: radial-gradient(circle at 50% $y, $color ($size * .72), transparent ($size * .72 + 1px));
+    background-size: ($size * 1.6) $size;
+    background-repeat: repeat-x;
+    z-index: 2;
+    pointer-events: none;
+  }
+}

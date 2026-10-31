@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Admin · Mafer</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600..900,0..100,0..1&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <!-- Login -->
+  <section class="login" data-login hidden>
+    <div class="login__box">
+      <a class="logo" href="/"><img class="logo__mark" src="/img/logo.svg" alt=""><span class="logo__text">Mafer</span></a>
+      <p class="muted">Panel de administración</p>
+      <form data-login-form>
+        <div class="field"><label for="l-email">Correo</label><input id="l-email" name="email" type="email" required autocomplete="username"></div>
+        <div class="field"><label for="l-pass">Contraseña</label><input id="l-pass" name="password" type="password" required autocomplete="current-password"></div>
+        <p class="notice notice--error" data-login-error hidden></p>
+        <button class="btn btn--block">Entrar</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Panel -->
+  <div class="admin" data-app hidden>
+    <nav class="admin__side" aria-label="Secciones">
+      <div class="brand"><img src="/img/logo.svg" alt="">Mafer</div>
+      <button class="tab is-active" data-tab="orders">🛵 Pedidos</button>
+      <button class="tab" data-tab="products">🎂 Pasteles</button>
+      <button class="tab" data-tab="categories">🏷 Categorías</button>
+      <span class="spacer"></span>
+      <a class="tab" href="/" target="_blank" style="color:inherit;text-decoration:none;padding:.7em 1em;font-weight:800">↗ Ver tienda</a>
+      <button class="tab" data-logout>Salir</button>
+      <span class="who" data-who></span>
+    </nav>
+
+    <main class="admin__main">
+      <!-- Pedidos -->
+      <section data-panel="orders">
+        <div class="admin__head">
+          <h1>Pedidos</h1>
+          <label class="switch"><input type="checkbox" data-sound checked><i></i> Sonido en pedidos nuevos</label>
+        </div>
+        <div class="stats">
+          <div class="stat"><span>Pedidos hoy</span><strong data-st-orders>0</strong></div>
+          <div class="stat"><span>Ventas hoy</span><strong data-st-revenue>$0</strong></div>
+          <div class="stat"><span>En curso</span><strong data-st-active>0</strong></div>
+          <div class="stat"><span>Productos</span><strong data-st-products>0</strong></div>
+        </div>
+        <div class="filters" data-order-filters>
+          <button class="is-active" data-filter="active">En curso</button>
+          <button data-filter="">Todos</button>
+          <button data-filter="pending">Esperando pago</button>
+          <button data-filter="delivered">Entregados</button>
+          <button data-filter="cancelled">Cancelados</button>
+        </div>
+        <div class="orders" data-orders></div>
+      </section>
+
+      <!-- Productos -->
+      <section data-panel="products" hidden>
+        <div class="admin__head">
+          <h1>Pasteles y productos</h1>
+          <button class="btn btn--pink" data-new-product>+ Subir pastel</button>
+        </div>
+        <div class="ptable" data-products></div>
+      </section>
+
+      <!-- Categorías -->
+      <section data-panel="categories" hidden>
+        <div class="admin__head"><h1>Categorías</h1></div>
+        <form class="card" data-cat-form style="max-width:560px;margin-bottom:1rem">
+          <div class="grid-2">
+            <div class="field"><label for="c-name">Nombre</label><input id="c-name" name="name" required placeholder="Ej. Pays"></div>
+            <div class="field"><label for="c-emoji">Emoji</label><input id="c-emoji" name="emoji" maxlength="4" value="🍰"></div>
+          </div>
+          <button class="btn">Agregar categoría</button>
+        </form>
+        <div class="cats" data-cats></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Formulario de producto -->
+  <div class="modal" data-modal role="dialog" aria-modal="true" aria-labelledby="p-title">
+    <div class="modal__box">
+      <button class="icon-btn modal__close" data-close-modal aria-label="Cerrar">✕</button>
+      <form class="modal__content" data-product-form>
+        <h2 id="p-title" data-p-title>Subir pastel</h2>
+        <input type="hidden" name="id">
+        <div class="field">
+          <label for="p-image">Foto</label>
+          <div class="preview"><img data-p-preview src="/img/products/placeholder.svg" alt=""><input id="p-image" name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></div>
+        </div>
+        <div class="field"><label for="p-name">Nombre</label><input id="p-name" name="name" required maxlength="120"></div>
+        <div class="field"><label for="p-desc">Descripción</label><textarea id="p-desc" name="description"></textarea></div>
+        <div class="grid-2">
+          <div class="field"><label for="p-price">Precio (MXN)</label><input id="p-price" name="price" type="number" step="0.01" min="1" required></div>
+          <div class="field"><label for="p-prep">Preparación (min)</label><input id="p-prep" name="prep_minutes" type="number" min="1" value="30"></div>
+        </div>
+        <div class="field"><label for="p-cat">Categoría</label><select id="p-cat" name="category_id" data-p-cats></select></div>
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.2rem">
+          <label class="switch"><input type="checkbox" name="available" checked><i></i> Disponible</label>
+          <label class="switch"><input type="checkbox" name="featured"><i></i> Favorito de la casa</label>
+        </div>
+        <p class="notice notice--error" data-p-error hidden></p>
+        <button class="btn btn--block" data-p-save>Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+  <script src="/js/common.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

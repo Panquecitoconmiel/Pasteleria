@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mafer · Pastelería</title>
+  <meta name="description" content="Pasteles, cupcakes y postres hechos con cariño. Pide en línea y te lo llevamos a casa.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600..900,0..100,0..1&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="test-banner" data-test-banner hidden>🧪 Modo prueba: los pagos con tarjeta usan Stripe en modo test. Usa la tarjeta 4242 4242 4242 4242.</div>
+
+  <div class="topbar">
+    <div class="container">
+      <span>🛵 Envío gratis en pedidos desde <strong data-free-from>$600</strong></span>
+      <nav class="topbar__links" aria-label="Enlaces rápidos">
+        <a href="/pedido.html">Rastrear pedido</a>
+        <a href="#contacto">Contacto</a>
+        <a href="/admin/">Admin</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="header" data-header>
+    <div class="container">
+      <a class="logo" href="/" aria-label="Mafer, inicio">
+        <img class="logo__mark" src="/img/logo.svg" alt="">
+        <span class="logo__text">Mafer</span>
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#inicio" class="is-active">Inicio</a>
+        <a href="#como-funciona">Cómo pedir</a>
+        <a href="#menu">Menú</a>
+        <a href="#favoritos">Favoritos</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <div class="header__actions">
+        <a class="icon-btn" href="/pedido.html" title="Rastrear pedido" aria-label="Rastrear pedido">🛵</a>
+        <button class="icon-btn cart-btn" data-open-cart aria-label="Abrir carrito">
+          🛒<span class="cart-btn__count" data-cart-count>0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container">
+        <div class="hero__art hero__art--left"><img src="/img/hero-left.svg" alt=""></div>
+        <div>
+          <span class="pill hero__kicker">🍂 Temporada de calabaza</span>
+          <h1 class="hero__title">Pastelería <span>Mafer</span></h1>
+          <p class="hero__text">Pasteles, cupcakes y postres horneados el mismo día. Pide en línea y te lo llevamos calientito a la puerta.</p>
+          <div class="hero__cta">
+            <a class="btn" href="#menu">Ver el menú</a>
+            <a class="btn btn--ghost" href="/pedido.html">Rastrear pedido</a>
+          </div>
+          <div class="hero__meta">
+            <span class="pill">⏱ 30–50 min</span>
+            <span class="pill">⭐ 4.9 (1.2k)</span>
+            <span class="pill">🛵 Envío <span data-delivery-fee>$45</span></span>
+          </div>
+        </div>
+        <div class="hero__art hero__art--right"><img src="/img/hero-right.svg" alt=""></div>
+      </div>
+    </section>
+
+    <section class="how" id="como-funciona">
+      <div class="container">
+        <h2>¡Pedir es facilísimo!</h2>
+        <div class="how__grid">
+          <div class="how__step"><span class="bubble">🧁</span><span class="pill">Elige</span><p>Escoge tus postres favoritos del menú.</p></div>
+          <div class="how__step"><span class="bubble">💗</span><span class="pill">Personaliza</span><p>Agrega notas: dedicatoria, sin nuez, etc.</p></div>
+          <div class="how__step"><span class="bubble">💳</span><span class="pill">Paga</span><p>Con tarjeta en línea o en efectivo al recibir.</p></div>
+          <div class="how__step"><span class="bubble">🛵</span><span class="pill">Recibe</span><p>Sigue tu pedido en tiempo real hasta tu puerta.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="menu" id="menu">
+      <div class="container">
+        <div class="menu__frame">
+          <div class="menu__head">
+            <h2>Nuestro menú</h2>
+            <label class="search">
+              <span class="sr-only">Buscar</span>
+              <input type="search" placeholder="Buscar pastel, galleta…" data-search>
+            </label>
+          </div>
+          <div class="chips" data-categories role="tablist" aria-label="Categorías"></div>
+          <div class="menu__grid" data-products>
+            <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="favs" id="favoritos">
+      <div class="container">
+        <h2>Los favoritos de la casa</h2>
+        <p class="muted">Lo que más piden nuestros clientes esta semana.</p>
+        <div class="favs__row" data-featured></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="contacto">
+    <div class="container">
+      <div>
+        <a class="logo" href="/"><img class="logo__mark" src="/img/logo.svg" alt=""><span class="logo__text">Mafer</span></a>
+        <p>Repostería artesanal hecha con amor, mantequilla de verdad y fruta de temporada.</p>
+      </div>
+      <div>
+        <h4>Horario</h4>
+        <ul><li>Lun–Vie · 9:00 a 20:00</li><li>Sáb–Dom · 10:00 a 18:00</li></ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul><li>📞 55 0000 0000</li><li>✉️ hola@mafer.mx</li><li>📍 Ciudad de México</li></ul>
+      </div>
+      <div class="footer__bottom">© <span data-year></span> Pastelería Mafer · Hecho con 💗</div>
+    </div>
+  </footer>
+
+  <!-- Detalle de producto -->
+  <div class="modal" data-modal role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal__box">
+      <button class="icon-btn modal__close" data-close-modal aria-label="Cerrar">✕</button>
+      <img class="modal__img" data-m-img src="" alt="">
+      <div class="modal__content">
+        <span class="pill" data-m-cat></span>
+        <h2 id="modal-title" data-m-name style="margin-top:.5rem"></h2>
+        <p data-m-desc></p>
+        <p class="muted" data-m-time></p>
+        <div class="field">
+          <label for="m-notes">Instrucciones especiales</label>
+          <textarea id="m-notes" data-m-notes maxlength="200" placeholder="Ej. “Feliz cumple Ana”, sin nuez…"></textarea>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center">
+          <div class="qty"><button data-m-minus aria-label="Menos">−</button><span data-m-qty>1</span><button data-m-plus aria-label="Más">+</button></div>
+          <button class="btn btn--block" data-m-add>Agregar · <span data-m-total></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrito -->
+  <aside class="drawer" data-drawer aria-label="Carrito">
+    <div class="drawer__overlay" data-close-cart></div>
+    <div class="drawer__panel">
+      <div class="drawer__head">
+        <h2 style="margin:0">Tu pedido</h2>
+        <button class="icon-btn" data-close-cart aria-label="Cerrar carrito">✕</button>
+      </div>
+      <div class="drawer__body" data-cart-lines></div>
+      <div class="drawer__foot" data-cart-foot>
+        <div class="summary-row"><span>Subtotal</span><strong data-cart-subtotal>$0</strong></div>
+        <p class="muted" style="font-size:.85rem;margin:.3rem 0 1rem" data-cart-hint></p>
+        <a class="btn btn--block" href="/checkout.html">Ir a pagar</a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/store.js"></script>
+</body>
+</html>

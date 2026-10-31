@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pagar · Mafer</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600..900,0..100,0..1&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="test-banner" data-test-banner hidden>🧪 Modo prueba · Tarjeta 4242 4242 4242 4242, cualquier fecha futura y cualquier CVC.</div>
+  <header class="header" data-header>
+    <div class="container">
+      <a class="logo" href="/"><img class="logo__mark" src="/img/logo.svg" alt=""><span class="logo__text">Mafer</span></a>
+      <div class="header__actions" style="margin-left:auto">
+        <a class="btn btn--ghost btn--sm" href="/#menu">← Seguir comprando</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container">
+      <h1 class="page__title">Finalizar pedido</h1>
+      <div class="notice" data-cancelled hidden style="margin-bottom:1rem">El pago se canceló. Tu carrito sigue aquí; puedes intentarlo de nuevo o pagar en efectivo.</div>
+
+      <div data-empty hidden class="card empty">
+        <div class="empty__icon">🧁</div>
+        <p><strong>Tu carrito está vacío.</strong></p>
+        <a class="btn" href="/#menu">Ver el menú</a>
+      </div>
+
+      <form class="checkout" data-form novalidate>
+        <div>
+          <section class="card">
+            <h3>¿Cómo lo quieres?</h3>
+            <div class="segmented">
+              <input type="radio" name="deliveryType" id="dt-delivery" value="delivery" checked><label for="dt-delivery">🛵 A domicilio</label>
+              <input type="radio" name="deliveryType" id="dt-pickup" value="pickup"><label for="dt-pickup">🏪 Recoger en tienda</label>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Tus datos</h3>
+            <div class="field"><label for="name">Nombre</label><input id="name" name="name" required autocomplete="name"></div>
+            <div class="field"><label for="phone">Teléfono</label><input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="55 1234 5678"></div>
+            <div class="field"><label for="email">Correo (para tu recibo)</label><input id="email" name="email" type="email" autocomplete="email"></div>
+            <div data-address-fields>
+              <div class="field"><label for="address">Dirección de entrega</label><input id="address" name="address" autocomplete="street-address" placeholder="Calle, número, colonia"></div>
+              <div class="field"><label for="addressNotes">Referencias</label><input id="addressNotes" name="addressNotes" placeholder="Portón rosa, depto 3…"></div>
+            </div>
+          </section>
+
+          <section class="card" data-tip-card>
+            <h3>Propina para el repartidor</h3>
+            <div class="tips" data-tips>
+              <button type="button" data-tip="0" class="is-active">Sin propina</button>
+              <button type="button" data-tip="20">$20</button>
+              <button type="button" data-tip="35">$35</button>
+              <button type="button" data-tip="50">$50</button>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Pago</h3>
+            <div class="pay-options">
+              <label class="pay-option"><input type="radio" name="paymentMethod" value="card" checked><span>💳 <strong>Tarjeta</strong><small>Pago seguro con Stripe (modo prueba)</small></span></label>
+              <label class="pay-option"><input type="radio" name="paymentMethod" value="cash"><span>💵 <strong>Efectivo</strong><small>Pagas al recibir tu pedido</small></span></label>
+            </div>
+            <p class="notice" data-stripe-off hidden style="margin-top:.8rem">Stripe aún no está configurado. Agrega <code>STRIPE_SECRET_KEY=sk_test_…</code> en tu <code>.env</code> o elige efectivo.</p>
+          </section>
+        </div>
+
+        <aside class="checkout__aside">
+          <section class="card">
+            <h3>Tu pedido</h3>
+            <div data-summary-lines></div>
+            <div style="margin-top:.8rem">
+              <div class="summary-row"><span>Subtotal</span><span data-s-subtotal>—</span></div>
+              <div class="summary-row"><span>Envío</span><span data-s-delivery>—</span></div>
+              <div class="summary-row" data-s-tip-row><span>Propina</span><span data-s-tip>—</span></div>
+              <div class="summary-row summary-row--total"><span>Total</span><span data-s-total>—</span></div>
+            </div>
+            <p class="notice notice--error" data-error hidden style="margin-top:1rem"></p>
+            <button class="btn btn--pink btn--block" style="margin-top:1rem" data-submit>Hacer pedido</button>
+            <p class="muted" style="font-size:.8rem;text-align:center;margin:.8rem 0 0">⏱ Entrega estimada: 35–50 min</p>
+          </section>
+        </aside>
+      </form>
+    </div>
+  </main>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+  <script src="/js/common.js"></script>
+  <script src="/js/checkout.js"></script>
+</body>
+</html>

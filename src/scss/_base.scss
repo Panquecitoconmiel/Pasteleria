@@ -1,0 +1,47 @@
+@use 'sass:color';
+@use 'tokens' as *;
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: $font-body;
+  color: $cocoa;
+  background: $cream;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+h1, h2, h3 {
+  font-family: $font-display;
+  font-variation-settings: 'SOFT' 100, 'WONK' 1;
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 0 0 .4em;
+  color: $cocoa;
+}
+
+.container {
+  width: 100%;
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: 16px;
+  @include md { padding-inline: 28px; }
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+:focus-visible { outline: 3px solid $pink-deep; outline-offset: 2px; border-radius: 6px; }
+
+.muted { opacity: .7; }

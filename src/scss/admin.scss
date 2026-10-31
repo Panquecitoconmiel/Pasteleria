@@ -1,0 +1,126 @@
+// Pastelería Mafer · panel de administración
+@use 'tokens' as *;
+@use 'base';
+@use 'components';
+
+body { background: $pink-soft; }
+
+.login {
+  min-height: 100vh;
+  display: grid; place-items: center;
+  padding: 16px;
+  background: $pink;
+
+  &__box {
+    width: 100%; max-width: 400px;
+    background: $cream;
+    border-radius: $radius-lg;
+    padding: 2rem;
+    box-shadow: $shadow;
+    text-align: center;
+    form { text-align: left; margin-top: 1rem; }
+  }
+  .logo { display: inline-flex; align-items: center; gap: .5rem; text-decoration: none; }
+  .logo__mark { width: 56px; }
+  .logo__text { font-family: $font-display; font-weight: 900; font-size: 2.2rem; }
+}
+
+.admin {
+  display: grid;
+  min-height: 100vh;
+  @include lg { grid-template-columns: 240px 1fr; }
+
+  &__side {
+    background: $cocoa;
+    color: $cream;
+    padding: 1rem;
+    display: flex; gap: .5rem; align-items: center; flex-wrap: wrap;
+    @include lg { flex-direction: column; align-items: stretch; padding: 1.5rem 1rem; position: sticky; top: 0; height: 100vh; }
+
+    .brand { display: flex; align-items: center; gap: .5rem; font-family: $font-display; font-weight: 900; font-size: 1.5rem; margin-right: auto;
+      img { width: 38px; background: $butter; border-radius: 50%; padding: 3px; }
+      @include lg { margin: 0 0 1.5rem; }
+    }
+    button.tab {
+      border: 0; background: transparent; color: $cream; text-align: left;
+      padding: .7em 1em; border-radius: 999px; font-weight: 800; cursor: pointer;
+      &:hover { background: rgba($cream, .1); }
+      &.is-active { background: $pink; color: $cocoa; }
+    }
+    .spacer { display: none; @include lg { display: block; flex: 1; } }
+    .who { font-size: .8rem; opacity: .75; width: 100%; @include lg { width: auto; } }
+  }
+
+  &__main { padding: 1.2rem 16px 3rem; @include md { padding: 2rem; } min-width: 0; }
+  &__head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.2rem;
+    h1 { font-size: 2rem; margin: 0; }
+  }
+}
+
+.stats {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 1.5rem;
+  @include md { grid-template-columns: repeat(4, 1fr); }
+  .stat { background: $white; border-radius: $radius; padding: 1rem 1.2rem; box-shadow: $shadow-sm;
+    span { font-size: .8rem; font-weight: 800; opacity: .7; }
+    strong { display: block; font-family: $font-display; font-size: 1.8rem; }
+  }
+}
+
+.filters { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 1rem;
+  button { border: 0; padding: .45em 1em; border-radius: 999px; background: $white; font-weight: 800; cursor: pointer;
+    &.is-active { background: $cocoa; color: $cream; } }
+}
+
+.orders { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); }
+.order {
+  background: $white; border-radius: $radius; padding: 1.1rem; box-shadow: $shadow-sm;
+  border-top: 6px solid $butter;
+  display: grid; gap: .5rem; align-content: start;
+  &[data-status='pending'] { border-top-color: #ccc; }
+  &[data-status='received'] { border-top-color: $pink-deep; }
+  &[data-status='preparing'] { border-top-color: $pumpkin; }
+  &[data-status='on_the_way'], &[data-status='ready'] { border-top-color: #7EC8E3; }
+  &[data-status='delivered'] { border-top-color: $ok; opacity: .8; }
+  &[data-status='cancelled'] { border-top-color: $danger; opacity: .6; }
+
+  &__top { display: flex; justify-content: space-between; align-items: start; gap: .5rem; }
+  &__code { font-weight: 900; }
+  &__items { white-space: pre-line; font-family: inherit; background: $cream; border-radius: $radius-sm; padding: .6rem .8rem; font-size: .9rem; margin: 0; }
+  &__meta { font-size: .85rem; }
+  &__actions { display: flex; gap: .4rem; flex-wrap: wrap; select { flex: 1; padding: .5em; border-radius: 999px; border: 2px solid rgba($cocoa, .15); background: $white; font-weight: 700; } }
+}
+
+.ptable { display: grid; gap: .7rem; }
+.prow {
+  display: grid; grid-template-columns: 64px 1fr auto; gap: 1rem; align-items: center;
+  background: $white; border-radius: $radius; padding: .7rem; box-shadow: $shadow-sm;
+  img { width: 64px; height: 64px; object-fit: cover; border-radius: $radius-sm; background: $pink-soft; }
+  &__name { font-weight: 800; }
+  &__meta { font-size: .85rem; opacity: .7; }
+  &__actions { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: end; }
+  &.is-off { opacity: .55; }
+  @media (max-width: 560px) { grid-template-columns: 56px 1fr; &__actions { grid-column: 1 / -1; justify-content: start; } }
+}
+
+.switch {
+  position: relative; display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; font-weight: 800; font-size: .85rem;
+  input { position: absolute; opacity: 0; }
+  i { width: 42px; height: 24px; border-radius: 999px; background: rgba($cocoa, .2); position: relative; transition: background .2s;
+    &::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: $white; transition: transform .2s; } }
+  input:checked + i { background: $ok; &::after { transform: translateX(18px); } }
+  input:focus-visible + i { outline: 3px solid $pink-deep; }
+}
+
+.preview { display: flex; gap: 1rem; align-items: center;
+  img { width: 96px; height: 96px; object-fit: cover; border-radius: $radius; background: $pink-soft; } }
+
+.grid-2 { display: grid; gap: 0 1rem; @include md { grid-template-columns: 1fr 1fr; } }
+
+.cats { display: grid; gap: .6rem; max-width: 560px; }
+.cat-row { display: flex; align-items: center; justify-content: space-between; background: $white; border-radius: $radius; padding: .7rem 1rem; box-shadow: $shadow-sm; font-weight: 800; }
+
+.modal__content h2 { font-size: 1.6rem; }
+
+.card { background: $white; border-radius: $radius-lg; padding: 1.4rem; box-shadow: $shadow-sm; }
