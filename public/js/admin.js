@@ -21,11 +21,10 @@
   // ---------- Sesión ----------
   async function boot() {
     try {
-      const me = await api('/api/admin/me');
-      showApp(me);
-    } catch {
-      $('[data-login]').hidden = false;
-    }
+      const { admin } = await api('/api/admin/session');
+      if (admin) return showApp(admin);
+    } catch { /* sin conexión */ }
+    $('[data-login]').hidden = false;
   }
 
   function showApp(me) {
@@ -125,6 +124,7 @@
         <pre class="order__items">${esc(o.items)}</pre>
         <div class="order__meta">
           <strong>${esc(o.customer_name)}</strong> · <a href="tel:${esc(o.customer_phone)}">${esc(o.customer_phone)}</a><br>
+          ${o.customer_email ? `<small class="muted">✉️ ${esc(o.customer_email)}</small><br>` : ''}
           ${o.delivery_type === 'pickup' ? '🏪 Recoge en tienda' : `🛵 ${esc(o.address)}${o.address_notes ? ` <span class="muted">(${esc(o.address_notes)})</span>` : ''}`}<br>
           ${pay} · <strong>${money(o.total)}</strong>
         </div>

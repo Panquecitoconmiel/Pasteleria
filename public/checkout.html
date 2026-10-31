@@ -32,7 +32,14 @@
         <a class="btn" href="/#menu">Ver el menú</a>
       </div>
 
-      <form class="checkout" data-form novalidate>
+      <section class="card gate" data-gate hidden>
+        <div class="gate__icon">🔐</div>
+        <h3>Inicia sesión para hacer tu pedido</h3>
+        <p class="muted">Como aquí se manejan pagos, pedimos que entres con tu cuenta de Google. Así también puedes ver el historial de tus pedidos.</p>
+        <div class="login-box__btn" data-gate-google></div>
+      </section>
+
+      <form class="checkout" data-form novalidate hidden>
         <div>
           <section class="card">
             <h3>¿Cómo lo quieres?</h3>
@@ -46,7 +53,7 @@
             <h3>Tus datos</h3>
             <div class="field"><label for="name">Nombre</label><input id="name" name="name" required autocomplete="name"></div>
             <div class="field"><label for="phone">Teléfono</label><input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="55 1234 5678"></div>
-            <div class="field"><label for="email">Correo (para tu recibo)</label><input id="email" name="email" type="email" autocomplete="email"></div>
+            <div class="field"><label for="email">Correo (de tu cuenta de Google)</label><input id="email" name="email" type="email" readonly></div>
             <div data-address-fields>
               <div class="field"><label for="address">Dirección de entrega</label><input id="address" name="address" autocomplete="street-address" placeholder="Calle, número, colonia"></div>
               <div class="field"><label for="addressNotes">Referencias</label><input id="addressNotes" name="addressNotes" placeholder="Portón rosa, depto 3…"></div>

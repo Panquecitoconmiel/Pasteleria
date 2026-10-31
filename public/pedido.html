@@ -22,8 +22,13 @@
 
   <main class="page">
     <div class="container" style="max-width:760px">
+      <section class="card" data-my-orders hidden>
+        <h1 class="page__title" style="font-size:2rem">Mis pedidos</h1>
+        <div class="my-orders" data-my-list></div>
+      </section>
+
       <form class="card" data-lookup hidden>
-        <h1 class="page__title" style="font-size:2rem">Rastrea tu pedido</h1>
+        <h2 style="font-size:1.6rem">Rastrea un pedido</h2>
         <div class="field"><label for="code">Código de pedido</label><input id="code" name="code" placeholder="MF-XXXXXX" required style="text-transform:uppercase"></div>
         <button class="btn">Buscar</button>
       </form>

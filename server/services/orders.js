@@ -49,7 +49,9 @@ async function priceCart(items, deliveryType, tip = 0) {
 }
 
 async function createOrder(payload) {
-  const { customer = {}, items, deliveryType = 'delivery', paymentMethod = 'card', tip } = payload;
+  const { customer = {}, items, deliveryType = 'delivery', paymentMethod = 'card', tip, userId } = payload;
+  const [[user]] = await db.query('SELECT id, email FROM users WHERE id = ?', [userId || 0]);
+  if (!user) throw httpError(401, 'Inicia sesión con Google para hacer tu pedido');
   const name = String(customer.name || '').trim();
   const phone = String(customer.phone || '').trim();
   if (!name || !phone) throw httpError(400, 'Nombre y teléfono son obligatorios');
@@ -65,10 +67,10 @@ async function createOrder(payload) {
   try {
     await conn.beginTransaction();
     const [r] = await conn.query(
-      `INSERT INTO orders (code, customer_name, customer_phone, customer_email, delivery_type, address, address_notes,
+      `INSERT INTO orders (code, user_id, customer_name, customer_phone, customer_email, delivery_type, address, address_notes,
                            payment_method, status, subtotal, delivery_fee, tip, total)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-      [code, name, phone, customer.email || null, deliveryType,
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      [code, user.id, name, phone, user.email, deliveryType,
        deliveryType === 'delivery' ? customer.address : null, customer.addressNotes || null,
        paymentMethod, initialStatus, priced.subtotal, priced.deliveryFee, priced.tip, priced.total]);
     const orderId = r.insertId;
@@ -78,8 +80,11 @@ async function createOrder(payload) {
         [orderId, l.product_id, l.product_name, l.unit_price, l.quantity, l.notes || null]);
     }
     await conn.query('INSERT INTO order_status_history (order_id, status) VALUES (?,?)', [orderId, initialStatus]);
+    // Guardamos teléfono y dirección para rellenarlos la próxima vez
+    await conn.query('UPDATE users SET phone = ?, address = COALESCE(?, address), address_notes = COALESCE(?, address_notes) WHERE id = ?',
+      [phone, deliveryType === 'delivery' ? customer.address : null, deliveryType === 'delivery' ? (customer.addressNotes || null) : null, user.id]);
     await conn.commit();
-    return { id: orderId, code, ...priced };
+    return { id: orderId, code, email: user.email, ...priced };
   } catch (e) {
     await conn.rollback();
     throw e;

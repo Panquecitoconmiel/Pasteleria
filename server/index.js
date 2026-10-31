@@ -17,6 +17,7 @@ app.use(express.json({ limit: '200kb' }));
 app.use(cookieParser());
 
 app.use('/api', require('./routes/catalog'));
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/admin', require('./routes/admin'));
 
@@ -32,10 +33,7 @@ app.use((err, req, res, next) => {
 });
 
 async function ensureAdmin() {
-  // Tabla de ajustes (portada). Se crea sola para quien ya tenía la base de datos.
-  await db.query(`CREATE TABLE IF NOT EXISTS settings (
-    \`key\` VARCHAR(60) PRIMARY KEY, value VARCHAR(255),
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)`);
+  await require('./migrate')();
   const [[{ n }]] = await db.query('SELECT COUNT(*) AS n FROM admins');
   if (n > 0) return;
   const email = (process.env.ADMIN_EMAIL || 'admin@mafer.com').toLowerCase();
@@ -48,6 +46,7 @@ async function ensureAdmin() {
 app.listen(config.port, async () => {
   console.log(`🧁 Mafer corriendo en ${config.baseUrl}`);
   console.log(config.stripe.enabled ? '💳 Stripe en MODO PRUEBA' : '💳 Stripe desactivado (agrega STRIPE_SECRET_KEY=sk_test_...)');
+  console.log(config.googleClientId ? '🔐 Inicio de sesión con Google activo' : '🔐 Falta GOOGLE_CLIENT_ID: los clientes no podrán iniciar sesión ni pedir');
   try {
     await ensureAdmin();
   } catch (e) {

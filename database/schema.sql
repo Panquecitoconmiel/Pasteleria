@@ -36,9 +36,24 @@ CREATE TABLE IF NOT EXISTS products (
   CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 
+-- Clientes (inician sesión con Google)
+CREATE TABLE IF NOT EXISTS users (
+  id            INT AUTO_INCREMENT PRIMARY KEY,
+  google_id     VARCHAR(64) NOT NULL UNIQUE,
+  email         VARCHAR(150) NOT NULL,
+  name          VARCHAR(120) NOT NULL,
+  picture       VARCHAR(500),
+  phone         VARCHAR(30),
+  address       VARCHAR(255),
+  address_notes VARCHAR(255),
+  created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_login    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS orders (
   id                INT AUTO_INCREMENT PRIMARY KEY,
   code              VARCHAR(12) NOT NULL UNIQUE,
+  user_id           INT NULL,
   customer_name     VARCHAR(120) NOT NULL,
   customer_phone    VARCHAR(30)  NOT NULL,
   customer_email    VARCHAR(150),
@@ -56,7 +71,9 @@ CREATE TABLE IF NOT EXISTS orders (
   created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_orders_status (status),
-  INDEX idx_orders_session (stripe_session_id)
+  INDEX idx_orders_session (stripe_session_id),
+  INDEX idx_orders_user (user_id),
+  CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS order_items (

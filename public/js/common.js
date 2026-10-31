@@ -66,8 +66,121 @@
     toastTimer = setTimeout(() => el.classList.remove('is-show'), 2200);
   }
 
+  // ---------- Cuenta del cliente (Google) ----------
+  let userPromise;
+  const getUser = (fresh = false) => {
+    if (fresh || !userPromise) userPromise = api('/api/auth/me').then((r) => r.user).catch(() => null);
+    return userPromise;
+  };
+
+  let gsiPromise;
+  function loadGoogle() {
+    return (gsiPromise ||= new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://accounts.google.com/gsi/client';
+      s.async = true;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('No se pudo cargar Google'));
+      document.head.appendChild(s);
+    }));
+  }
+
+  // Pinta el botón oficial "Continuar con Google" dentro de `el`
+  async function renderGoogleButton(el) {
+    const cfg = await getConfig();
+    if (!cfg.googleClientId) {
+      el.innerHTML = '<p class="notice">El inicio de sesión no está configurado. Agrega <code>GOOGLE_CLIENT_ID</code> en tu <code>.env</code> y reinicia el servidor.</p>';
+      return;
+    }
+    try {
+      await loadGoogle();
+      google.accounts.id.initialize({
+        client_id: cfg.googleClientId,
+        callback: async ({ credential }) => {
+          try {
+            await api('/api/auth/google', { method: 'POST', body: { credential } });
+            location.reload();
+          } catch (e) { toast(`⚠️ ${e.message}`); }
+        }
+      });
+      el.innerHTML = '';
+      google.accounts.id.renderButton(el, { theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', locale: 'es' });
+    } catch (e) {
+      el.innerHTML = `<p class="notice notice--error">${esc(e.message)}. Revisa tu conexión.</p>`;
+    }
+  }
+
+  function openLogin() {
+    let modal = $('[data-login-modal]');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.dataset.loginModal = '';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.innerHTML = `
+        <div class="modal__box login-box">
+          <button class="icon-btn modal__close" data-close-login aria-label="Cerrar">✕</button>
+          <div class="modal__content">
+            <img src="/img/logo.png" alt="" class="login-box__logo">
+            <h2>Inicia sesión</h2>
+            <p class="muted">Para cuidar tus pagos y que puedas ver tus pedidos, entra con tu cuenta de Google.</p>
+            <div class="login-box__btn" data-google-btn></div>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      const close = () => modal.classList.remove('is-open');
+      modal.addEventListener('click', (e) => (e.target === modal || e.target.closest('[data-close-login]')) && close());
+      document.addEventListener('keydown', (e) => e.key === 'Escape' && close());
+      renderGoogleButton($('[data-google-btn]', modal));
+    }
+    modal.classList.add('is-open');
+  }
+
+  async function logout() {
+    await api('/api/auth/logout', { method: 'POST' }).catch(() => {});
+    try { google.accounts.id.disableAutoSelect(); } catch { /* sin script */ }
+    location.href = '/';
+  }
+
+  async function renderAccount() {
+    const actions = $('.header__actions');
+    if (!actions) return;
+    const box = document.createElement('div');
+    box.className = 'account';
+    actions.prepend(box);
+    const user = await getUser();
+    if (!user) {
+      box.innerHTML = '<button class="btn btn--sm" data-open-login>Iniciar sesión</button>';
+      return;
+    }
+    const first = esc(user.name.split(' ')[0]);
+    box.innerHTML = `
+      <button class="account__btn" data-account-toggle aria-haspopup="true" aria-expanded="false">
+        ${user.picture ? `<img src="${esc(user.picture)}" alt="" referrerpolicy="no-referrer">` : `<span>${first[0]}</span>`}
+        <span class="account__name">${first}</span>
+      </button>
+      <div class="account__menu" data-account-menu hidden>
+        <div class="account__who"><strong>${esc(user.name)}</strong><small>${esc(user.email)}</small></div>
+        <a href="/pedido.html">🧾 Mis pedidos</a>
+        <button data-logout-user>↩ Cerrar sesión</button>
+      </div>`;
+  }
+
   // ---------- UI compartida ----------
   function initShell() {
+    renderAccount();
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-open-login]')) openLogin();
+      if (e.target.closest('[data-logout-user]')) logout();
+      const toggle = e.target.closest('[data-account-toggle]');
+      const menu = $('[data-account-menu]');
+      if (menu) {
+        if (toggle) { menu.hidden = !menu.hidden; toggle.setAttribute('aria-expanded', String(!menu.hidden)); }
+        else if (!e.target.closest('[data-account-menu]')) menu.hidden = true;
+      }
+    });
+
     $$('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
 
     const header = $('[data-header]');
@@ -125,6 +238,6 @@
     });
   }
 
-  window.Mafer = { $, $$, money, esc, api, cart, toast, getConfig, initShell };
+  window.Mafer = { $, $$, money, esc, api, cart, toast, getConfig, initShell, getUser, openLogin, renderGoogleButton };
   document.addEventListener('DOMContentLoaded', initShell);
 })();

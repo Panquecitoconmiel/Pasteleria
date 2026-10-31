@@ -2,6 +2,7 @@ const router = require('express').Router();
 const db = require('../db');
 const config = require('../config');
 const orders = require('../services/orders');
+const { requireUser } = require('../middleware/customer');
 const stripe = config.stripe.enabled ? require('stripe')(config.stripe.secretKey) : null;
 
 // Cotizar carrito (subtotal, envío, total) sin crear pedido
@@ -14,13 +15,13 @@ router.post('/quote', async (req, res, next) => {
 });
 
 // Crear pedido. Si es con tarjeta, abre una sesión de Stripe Checkout (modo prueba)
-router.post('/', async (req, res, next) => {
+router.post('/', requireUser, async (req, res, next) => {
   try {
     const { paymentMethod = 'card' } = req.body;
     if (paymentMethod === 'card' && !stripe) {
       return res.status(400).json({ error: 'El pago con tarjeta no está configurado. Agrega tus llaves sk_test_ de Stripe en .env' });
     }
-    const order = await orders.createOrder(req.body);
+    const order = await orders.createOrder({ ...req.body, userId: req.userId });
 
     if (paymentMethod === 'cash') {
       return res.json({ code: order.code, redirect: `/pedido.html?code=${order.code}` });
@@ -44,7 +45,7 @@ router.post('/', async (req, res, next) => {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items,
-      customer_email: req.body.customer?.email || undefined,
+      customer_email: order.email || undefined,
       client_reference_id: String(order.id),
       metadata: { order_id: String(order.id), order_code: order.code },
       success_url: `${config.baseUrl}/pedido.html?code=${order.code}&session_id={CHECKOUT_SESSION_ID}`,

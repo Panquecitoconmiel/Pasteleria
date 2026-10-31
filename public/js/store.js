@@ -136,20 +136,6 @@
   let t;
   $('[data-search]').addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => { query = e.target.value.trim(); renderProducts(); }, 150); });
 
-  // Hojitas de otoño cayendo en el hero
-  const hero = $('.hero');
-  if (hero && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    ['🍂', '🍁', '🍂', '🍁', '🍂'].forEach((leaf, i) => {
-      const s = document.createElement('span');
-      s.className = 'leaf';
-      s.textContent = leaf;
-      s.style.left = `${8 + i * 21}%`;
-      s.style.top = '0';
-      s.style.animationDelay = `${i * 1.7}s`;
-      hero.appendChild(s);
-    });
-  }
-
   loadHero();
   load();
 })();

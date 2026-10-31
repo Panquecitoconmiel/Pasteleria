@@ -9,6 +9,7 @@ router.get('/config', (req, res) => {
     deliveryFee: config.deliveryFee,
     freeDeliveryFrom: config.freeDeliveryFrom,
     stripeEnabled: config.stripe.enabled,
+    googleClientId: config.googleClientId || null,
     testMode: true
   });
 });

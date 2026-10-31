@@ -11,6 +11,7 @@ module.exports = {
   port: toNum(process.env.PORT, 3000),
   baseUrl: (process.env.BASE_URL || 'http://localhost:3000').replace(/\/$/, ''),
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-cambialo',
+  googleClientId: (process.env.GOOGLE_CLIENT_ID || '').trim(),
   currency: (process.env.CURRENCY || 'mxn').toLowerCase(),
   deliveryFee: toNum(process.env.DELIVERY_FEE, 45),
   freeDeliveryFrom: toNum(process.env.FREE_DELIVERY_FROM, 600),

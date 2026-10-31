@@ -250,3 +250,66 @@
   code { background: $white; padding: .1em .4em; border-radius: 6px; }
   &--error { background: color.adjust($danger, $lightness: 38%); color: color.adjust($danger, $lightness: -15%); }
 }
+
+// ---------- Cuenta del cliente ----------
+.account {
+  position: relative;
+
+  &__btn {
+    display: flex; align-items: center; gap: .45rem;
+    padding: 4px 12px 4px 4px;
+    border: 0; border-radius: 999px;
+    background: $white; color: $cocoa;
+    font-weight: 800; cursor: pointer;
+    box-shadow: $shadow-sm;
+    img, > span:first-child {
+      width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+      display: grid; place-items: center; background: $butter;
+    }
+    &:hover { background: $pink-soft; }
+  }
+  &__name { display: none; @include md { display: inline; } }
+
+  &__menu {
+    position: absolute; right: 0; top: calc(100% + 8px); z-index: 45;
+    min-width: 230px;
+    background: $white; border-radius: $radius; padding: .5rem;
+    box-shadow: $shadow;
+    display: grid;
+    a, button {
+      text-align: left; padding: .65em .8em; border-radius: $radius-sm;
+      border: 0; background: none; font-weight: 800; text-decoration: none; cursor: pointer;
+      &:hover { background: $pink-soft; }
+    }
+  }
+  &__who {
+    padding: .5em .8em .7em; margin-bottom: .3rem; border-bottom: 1px solid rgba($cocoa, .1);
+    strong, small { display: block; }
+    small { opacity: .65; word-break: break-all; }
+  }
+}
+
+.login-box {
+  max-width: 420px;
+  text-align: center;
+  &__logo { height: 64px; width: auto; margin: .4rem auto .8rem; }
+  &__btn { display: flex; justify-content: center; min-height: 44px; margin-top: 1rem; }
+}
+
+.gate {
+  text-align: center;
+  display: grid; justify-items: center; gap: .4rem;
+  padding: 2rem 1.4rem;
+  .gate__icon { font-size: 2.6rem; }
+  p { max-width: 42ch; margin: 0 0 .6rem; }
+}
+
+.my-orders {
+  display: grid; gap: .6rem;
+  a {
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: .9rem 1rem; border-radius: $radius; background: $cream; text-decoration: none;
+    &:hover { background: $pink-soft; }
+  }
+  small { display: block; opacity: .7; }
+}

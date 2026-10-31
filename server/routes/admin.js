@@ -6,7 +6,7 @@ const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const db = require('../db');
 const orders = require('../services/orders');
-const { signAdmin, requireAdmin, COOKIE } = require('../middleware/auth');
+const { signAdmin, requireAdmin, readAdmin, COOKIE } = require('../middleware/auth');
 
 // ---------- Subida de imágenes ----------
 const uploadDir = path.join(__dirname, '..', '..', 'public', 'uploads');
@@ -51,6 +51,9 @@ router.post('/logout', (req, res) => {
   res.clearCookie(COOKIE);
   res.json({ ok: true });
 });
+
+// Saber si hay sesión sin provocar un error 401 en la consola
+router.get('/session', (req, res) => res.json({ admin: readAdmin(req) }));
 
 router.use(requireAdmin);
 
@@ -195,7 +198,7 @@ router.get('/orders', async (req, res, next) => {
     if (status === 'active') where += " AND o.status IN ('received','preparing','ready','on_the_way')";
     else if (status) { where += ' AND o.status = ?'; params.push(status); }
     const [rows] = await db.query(
-      `SELECT o.id, o.code, o.customer_name, o.customer_phone, o.delivery_type, o.address, o.address_notes,
+      `SELECT o.id, o.code, o.customer_name, o.customer_phone, o.customer_email, o.delivery_type, o.address, o.address_notes,
               o.payment_method, o.payment_status, o.status, o.total, o.created_at,
               (SELECT GROUP_CONCAT(CONCAT(quantity, '× ', product_name, IFNULL(CONCAT(' (', notes, ')'), '')) SEPARATOR '\n')
                  FROM order_items WHERE order_id = o.id) AS items

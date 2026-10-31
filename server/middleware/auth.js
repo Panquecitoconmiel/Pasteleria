@@ -13,6 +13,12 @@ function signAdmin(res, admin) {
   });
 }
 
+function readAdmin(req) {
+  const token = req.cookies[COOKIE];
+  if (!token) return null;
+  try { return jwt.verify(token, jwtSecret); } catch { return null; }
+}
+
 function requireAdmin(req, res, next) {
   const token = req.cookies[COOKIE];
   if (!token) return res.status(401).json({ error: 'No autorizado' });
@@ -24,4 +30,4 @@ function requireAdmin(req, res, next) {
   }
 }
 
-module.exports = { signAdmin, requireAdmin, COOKIE };
+module.exports = { signAdmin, requireAdmin, readAdmin, COOKIE };

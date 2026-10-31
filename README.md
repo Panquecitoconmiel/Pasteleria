@@ -38,7 +38,25 @@ Entra a **http://localhost:3000/admin/** con el `ADMIN_EMAIL` y `ADMIN_PASSWORD`
 
 > Si cambias la contraseña en `.env` después de la primera vez, no se actualiza sola: borra la fila de la tabla `admins` y reinicia el servidor.
 
-## 4. Pagos con Stripe (modo prueba)
+## 4. Inicio de sesión con Google (obligatorio para pedir)
+
+Los clientes deben entrar con su cuenta de Google antes de hacer un pedido. Así cada pedido queda ligado a una persona real con correo verificado, y el cliente puede ver su historial en **Mis pedidos**.
+
+1. Entra a https://console.cloud.google.com/ y crea un proyecto (por ejemplo "Mafer").
+2. Ve a **APIs y servicios → Pantalla de consentimiento de OAuth**. Elige **Externo**, ponle nombre "Pastelería Mafer" y tu correo, y guarda.
+3. Ve a **APIs y servicios → Credenciales → Crear credenciales → ID de cliente de OAuth**.
+   - Tipo de aplicación: **Aplicación web**.
+   - **Orígenes autorizados de JavaScript:** agrega `http://localhost` y `http://localhost:3001` (el puerto que uses). Cuando publiques, agrega también tu dominio, por ejemplo `https://mafer.mx`.
+   - No necesitas URIs de redireccionamiento.
+4. Copia el **ID de cliente** (termina en `.apps.googleusercontent.com`) a tu `.env`:
+   ```
+   GOOGLE_CLIENT_ID=1234567890-abc.apps.googleusercontent.com
+   ```
+5. Reinicia el servidor. En la consola debe salir `🔐 Inicio de sesión con Google activo`.
+
+El servidor verifica cada inicio de sesión directamente con Google, así que nadie puede hacerse pasar por otra cuenta. Al hacer su primer pedido se guardan el teléfono y la dirección del cliente para rellenarlos la próxima vez.
+
+## 5. Pagos con Stripe (modo prueba)
 
 1. Crea una cuenta en https://dashboard.stripe.com y deja activado **"Modo de prueba"**.
 2. Copia tus llaves de https://dashboard.stripe.com/test/apikeys en `.env`:
@@ -60,7 +78,7 @@ Por seguridad el proyecto **rechaza llaves `sk_live_`**: sólo funciona en modo 
 
 Sin llaves de Stripe la tienda sigue funcionando con pago en **efectivo**.
 
-## 5. Subirlo a internet
+## 6. Subirlo a internet
 
 Este proyecto necesita un hosting que ejecute **Node.js** (un hosting compartido sólo de PHP no sirve). Opciones sencillas:
 
@@ -79,9 +97,10 @@ Este proyecto necesita un hosting que ejecute **Node.js** (un hosting compartido
 Recuerda en producción:
 - `NODE_ENV=production` (las cookies de sesión pasan a ser seguras).
 - Un `JWT_SECRET` largo y aleatorio y una contraseña de admin fuerte.
+- Agregar tu dominio en los orígenes autorizados del ID de cliente de Google.
 - Las fotos se guardan en `public/uploads/`. En plataformas con disco efímero (Render gratis, Railway sin volumen) monta un volumen persistente en esa carpeta para no perderlas al redeploy.
 
-## 6. Estructura
+## 7. Estructura
 
 ```
 mafer/
@@ -105,15 +124,16 @@ mafer/
     └── uploads/               Fotos que sube el admin
 ```
 
-## 7. Personalizar
+## 8. Personalizar
 
 - **Colores y tipografía:** `src/scss/_tokens.scss` y luego `npm run build:css`.
 - **Envío:** `DELIVERY_FEE` y `FREE_DELIVERY_FROM` en `.env`.
 - **Horario y contacto:** pie de página en `public/index.html`.
 - **Productos:** la tienda arranca vacía; sube cada pastel con su foto desde `/admin/` → Pasteles → "+ Subir pastel". Marca "Favorito de la casa" para que aparezca en la sección de favoritos.
 
-## 8. Seguridad incluida
+## 9. Seguridad incluida
 
+- Sólo clientes con sesión de Google (correo verificado) pueden hacer pedidos.
 - Los precios siempre se recalculan en el servidor con MySQL (el navegador no puede alterar el total).
 - Contraseñas con bcrypt, sesión en cookie `httpOnly`.
 - Validación de tipo y tamaño de imágenes.

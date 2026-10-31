@@ -1,6 +1,6 @@
 /* Mafer · seguimiento del pedido estilo app de reparto */
 (() => {
-  const { $, money, esc, api, cart } = window.Mafer;
+  const { $, money, esc, api, cart, getUser } = window.Mafer;
   const params = new URLSearchParams(location.search);
   let code = (params.get('code') || '').toUpperCase();
   let timer;
@@ -82,6 +82,7 @@
       } catch (e) { showError(e.message); }
     }
     if (!code) {
+      showMyOrders();
       let last = '';
       try { last = localStorage.getItem('mafer_last_order') || ''; } catch {}
       $('[data-lookup]').hidden = false;
@@ -89,6 +90,28 @@
       return;
     }
     load();
+  }
+
+  const STATUS_TEXT = {
+    pending: 'Esperando pago', received: 'Recibido', preparing: 'En el horno', ready: 'Listo para recoger',
+    on_the_way: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado'
+  };
+
+  async function showMyOrders() {
+    const user = await getUser();
+    if (!user) return;
+    try {
+      const list = await api('/api/auth/orders');
+      $('[data-my-orders]').hidden = false;
+      $('[data-my-list]').innerHTML = list.length
+        ? list.map((o) => `
+          <a href="/pedido.html?code=${esc(o.code)}">
+            <span><strong>${esc(o.code)}</strong> · ${STATUS_TEXT[o.status] || o.status}
+              <small>${new Date(o.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })} · ${esc(o.items || '')}</small></span>
+            <strong>${money(o.total)}</strong>
+          </a>`).join('')
+        : '<p class="muted">Aún no tienes pedidos. <a href="/#menu">Ver el menú</a></p>';
+    } catch { /* sesión expirada */ }
   }
 
   $('[data-lookup]').addEventListener('submit', (e) => {

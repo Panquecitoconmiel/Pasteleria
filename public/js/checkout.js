@@ -1,6 +1,6 @@
 /* Mafer · checkout: datos de entrega, propina, cotización en servidor y pago */
 (() => {
-  const { $, $$, money, esc, api, cart, getConfig } = window.Mafer;
+  const { $, $$, money, esc, api, cart, getConfig, getUser, renderGoogleButton } = window.Mafer;
   const form = $('[data-form]');
   let tip = 0;
   let cfg = {};
@@ -89,7 +89,7 @@
           ...payload(),
           paymentMethod: paymentMethod(),
           customer: {
-            name: f.name.value, phone: f.phone.value, email: f.email.value,
+            name: f.name.value, phone: f.phone.value,
             address: f.address.value, addressNotes: f.addressNotes.value
           }
         }
@@ -98,6 +98,7 @@
       if (paymentMethod() === 'cash') cart.clear();
       location.href = res.redirect;
     } catch (err) {
+      if (err.status === 401) return location.reload();
       showError(err.message);
       btn.disabled = false;
       quote();
@@ -111,10 +112,34 @@
     syncMode();
   });
 
-  cart.onChange(() => {
+  let user = null;
+  let ready = false;
+
+  function refresh() {
+    if (!ready) return;
     const empty = cart.items.length === 0;
     $('[data-empty]').hidden = !empty;
-    form.hidden = empty;
-    if (!empty) { renderLines(); quote(); }
+    $('[data-gate]').hidden = empty || !!user;
+    form.hidden = empty || !user;
+    if (!empty && user) { renderLines(); quote(); }
+  }
+
+  // Sólo los clientes con sesión de Google pueden pedir
+  getUser().then((u) => {
+    user = u;
+    ready = true;
+    if (user) {
+      const f = form.elements;
+      f.name.value = user.name || '';
+      f.email.value = user.email || '';
+      f.phone.value = user.phone || '';
+      f.address.value = user.address || '';
+      f.addressNotes.value = user.addressNotes || '';
+    } else {
+      renderGoogleButton($('[data-gate-google]'));
+    }
+    refresh();
   });
+
+  cart.onChange(refresh);
 })();
