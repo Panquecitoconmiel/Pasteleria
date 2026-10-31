@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Admin · Mafer</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/img/logo.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600..900,0..100,0..1&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
   <!-- Login -->
   <section class="login" data-login hidden>
     <div class="login__box">
-      <a class="logo" href="/"><img class="logo__mark" src="/img/logo.svg" alt=""><span class="logo__text">Mafer</span></a>
+      <a class="logo" href="/"><img class="logo__mark" src="/img/logo.png" alt=""><span class="logo__text">Mafer</span></a>
       <p class="muted">Panel de administración</p>
       <form data-login-form>
         <div class="field"><label for="l-email">Correo</label><input id="l-email" name="email" type="email" required autocomplete="username"></div>
@@ -29,7 +29,7 @@
   <!-- Panel -->
   <div class="admin" data-app hidden>
     <nav class="admin__side" aria-label="Secciones">
-      <div class="brand"><img src="/img/logo.svg" alt="">Mafer</div>
+      <div class="brand"><img src="/img/logo.png" alt="">Mafer</div>
       <button class="tab is-active" data-tab="orders">🛵 Pedidos</button>
       <button class="tab" data-tab="products">🎂 Pasteles</button>
       <button class="tab" data-tab="categories">🏷 Categorías</button>
@@ -87,7 +87,7 @@
       <!-- Portada -->
       <section data-panel="hero" hidden>
         <div class="admin__head"><h1>Fotos de la portada</h1></div>
-        <p class="muted" style="max-width:60ch">Son las dos fotos redondas a los lados del título "Pastelería Mafer". Usa fotos cuadradas con el postre al centro. Si no subes ninguna, se usan las fotos de tus pasteles favoritos.</p>
+        <p class="muted" style="max-width:60ch">Son las dos fotos redondas a los lados del título "Pastelería Mafer". Usa fotos cuadradas con el postre al centro. Si no subes ninguna aquí, se usan los archivos <code>public/img/izquierdo.png</code> y <code>public/img/derecho.png</code>.</p>
         <form class="hero-slots" data-hero-form>
           <div class="card hero-slot">
             <h3>Izquierda</h3>

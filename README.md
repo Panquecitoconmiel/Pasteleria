@@ -34,7 +34,7 @@ Entra a **http://localhost:3000/admin/** con el `ADMIN_EMAIL` y `ADMIN_PASSWORD`
 - **Pedidos:** tarjetas de cada pedido con botón rápido para avanzar el estado (Recibido → En el horno → En camino → Entregado), sonido al llegar pedidos nuevos, filtros y ventas del día.
 - **Pasteles:** subir pastel con foto (JPG/PNG/WEBP, máx. 5 MB), precio, categoría, tiempo de preparación, marcar como favorito o agotado, editar y eliminar.
 - **Categorías:** agregar o quitar categorías del menú.
-- **Portada:** sube las dos fotos redondas que van a los lados del título. Si no subes ninguna, se usan las fotos de tus pasteles favoritos.
+- **Portada:** sube las dos fotos redondas que van a los lados del título. Si no subes ninguna, se usan los archivos `public/img/izquierdo.png` y `public/img/derecho.png`.
 
 > Si cambias la contraseña en `.env` después de la primera vez, no se actualiza sola: borra la fila de la tabla `admins` y reinicia el servidor.
 

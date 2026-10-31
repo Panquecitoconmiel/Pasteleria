@@ -43,18 +43,19 @@
       </button>`).join('');
   }
 
-  // Fotos del encabezado: las que subió el admin en "Portada";
-  // si no hay, usa las fotos de los pasteles favoritos.
+  // Fotos del encabezado: primero las que se suban desde el admin (Portada);
+  // si no hay, usa los archivos public/img/izquierdo.png y public/img/derecho.png
+  const HERO_FILES = { left: '/img/izquierdo.png', right: '/img/derecho.png' };
   async function loadHero() {
     let hero = {};
-    try { hero = await api('/api/hero'); } catch { /* sin portada */ }
-    const fallback = products.filter((p) => p.featured).concat(products).map((p) => p.image).filter((src) => src.startsWith('/uploads/'));
-    const pics = { left: hero.left || fallback[0], right: hero.right || fallback.find((src) => src !== (hero.left || fallback[0])) };
+    try { hero = await api('/api/hero'); } catch { /* sin portada en la base */ }
     ['left', 'right'].forEach((side) => {
       const box = $(`[data-hero="${side}"]`);
-      if (!box || !pics[side]) return;
-      box.querySelector('img').src = pics[side];
-      box.hidden = false;
+      if (!box) return;
+      const img = box.querySelector('img');
+      img.onload = () => { box.hidden = false; };
+      img.onerror = () => { box.hidden = true; };
+      img.src = hero[side] || HERO_FILES[side];
     });
   }
 
@@ -67,7 +68,6 @@
         cats.map((c) => `<button data-cat="${esc(c.slug)}">${esc(c.emoji)} ${esc(c.name)}</button>`).join('');
       renderProducts();
       renderFeatured();
-      loadHero();
     } catch (e) {
       $('[data-products]').innerHTML = `<div class="notice notice--error" style="grid-column:1/-1">No pudimos cargar el menú (${esc(e.message)}). ¿Está corriendo el servidor y MySQL?</div>`;
     }
@@ -150,5 +150,6 @@
     });
   }
 
+  loadHero();
   load();
 })();

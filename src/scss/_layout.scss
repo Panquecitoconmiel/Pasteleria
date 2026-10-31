@@ -32,7 +32,7 @@
   text-decoration: none;
   transform: rotate(-2deg);
 
-  &__mark { width: 40px; height: 40px; }
+  &__mark { height: 40px; width: auto; max-width: 120px; object-fit: contain; }
   &__text {
     font-family: $font-display;
     font-variation-settings: 'SOFT' 100, 'WONK' 1;

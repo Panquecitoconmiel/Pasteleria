@@ -21,7 +21,7 @@ body { background: $pink-soft; }
     form { text-align: left; margin-top: 1rem; }
   }
   .logo { display: inline-flex; align-items: center; gap: .5rem; text-decoration: none; }
-  .logo__mark { width: 56px; }
+  .logo__mark { height: 56px; width: auto; max-width: 160px; object-fit: contain; }
   .logo__text { font-family: $font-display; font-weight: 900; font-size: 2.2rem; }
 }
 
@@ -38,7 +38,7 @@ body { background: $pink-soft; }
     @include lg { flex-direction: column; align-items: stretch; padding: 1.5rem 1rem; position: sticky; top: 0; height: 100vh; }
 
     .brand { display: flex; align-items: center; gap: .5rem; font-family: $font-display; font-weight: 900; font-size: 1.5rem; margin-right: auto;
-      img { width: 38px; background: $butter; border-radius: 50%; padding: 3px; }
+      img { height: 38px; width: auto; max-width: 110px; object-fit: contain; }
       @include lg { margin: 0 0 1.5rem; }
     }
     button.tab {
